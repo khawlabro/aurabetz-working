@@ -83,137 +83,13 @@
       ]
     },
     {
-      "id": 6,
+      "id": 3,
       "sport": "UFC",
-      "event": "Florida Panthers vs Edmenton Oilers",
-      "time": "",
-      "mainBet": {
-        "type": "Moneyline",
-        "pick": "Florida Panthers",
-        "odds": null,
-        "probability": null,
-        "value": null,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": null
-        },
-        {
-          "name": "FanDuel",
-          "odds": null
-        },
-        {
-          "name": "BetMGM",
-          "odds": null
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "sport": "Soccer",
-      "event": "Milan vs Barcelona",
-      "time": "",
-      "mainBet": {
-        "type": "Moneyline",
-        "pick": "Barcelona",
-        "odds": -350,
-        "probability": 0.5,
-        "value": 0.5,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": -350
-        },
-        {
-          "name": "FanDuel",
-          "odds": -345
-        },
-        {
-          "name": "BetMGM",
-          "odds": -355
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "sport": "UFC",
-      "event": "Big Mike vs Osamba",
+      "event": "test",
       "time": "",
       "mainBet": {
         "type": "",
         "pick": "",
-        "odds": null,
-        "probability": null,
-        "value": null,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": null
-        },
-        {
-          "name": "FanDuel",
-          "odds": null
-        },
-        {
-          "name": "BetMGM",
-          "odds": null
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "sport": "UFC",
-      "event": "bitch",
-      "time": "",
-      "mainBet": {
-        "type": "",
-        "pick": "",
-        "odds": null,
-        "probability": null,
-        "value": null,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": null
-        },
-        {
-          "name": "FanDuel",
-          "odds": null
-        },
-        {
-          "name": "BetMGM",
-          "odds": null
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "sport": "UFC",
-      "event": "Mucho vs Bandeto",
-      "time": "",
-      "mainBet": {
-        "type": "Futurama",
-        "pick": "Ballz",
         "odds": null,
         "probability": null,
         "value": null,
