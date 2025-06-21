@@ -147,69 +147,7 @@
     {
       "id": 8,
       "sport": "UFC",
-      "event": "Big Mike vs Osamba",
-      "time": "",
-      "mainBet": {
-        "type": "",
-        "pick": "",
-        "odds": null,
-        "probability": null,
-        "value": null,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": null
-        },
-        {
-          "name": "FanDuel",
-          "odds": null
-        },
-        {
-          "name": "BetMGM",
-          "odds": null
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "sport": "UFC",
-      "event": "bitch",
-      "time": "",
-      "mainBet": {
-        "type": "",
-        "pick": "",
-        "odds": null,
-        "probability": null,
-        "value": null,
-        "confidence": "High"
-      },
-      "otherBets": [],
-      "analysis": "",
-      "aiReasoning": "",
-      "sportsbooks": [
-        {
-          "name": "DraftKings",
-          "odds": null
-        },
-        {
-          "name": "FanDuel",
-          "odds": null
-        },
-        {
-          "name": "BetMGM",
-          "odds": null
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "sport": "UFC",
-      "event": "khawla ",
+      "event": "test 1",
       "time": "",
       "mainBet": {
         "type": "",
