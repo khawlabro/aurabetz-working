@@ -117,6 +117,15 @@ class BetSmartApp {
         // Subscribe button
         document.getElementById('subscribeBtn')?.addEventListener('click', () => this.showSubscribeModal());
 
+        // Admin panel modal
+        document.getElementById('adminPanelBtn')?.addEventListener('click', () => this.showAdminModal());
+        document.getElementById('closeAdminModal')?.addEventListener('click', () => this.hideAdminModal());
+        document.getElementById('adminModal')?.addEventListener('click', (e) => {
+            if (e.target === document.getElementById('adminModal')) {
+                this.hideAdminModal();
+            }
+        });
+
         // Sport tabs
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
@@ -205,6 +214,14 @@ class BetSmartApp {
 
     hideSubscribeModal() {
         document.getElementById('subscribeModal')?.classList.remove('active');
+    }
+
+    showAdminModal() {
+        document.getElementById('adminModal')?.classList.add('active');
+    }
+
+    hideAdminModal() {
+        document.getElementById('adminModal')?.classList.remove('active');
     }
 
     async loadUsers() {
