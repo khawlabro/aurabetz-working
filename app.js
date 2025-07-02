@@ -2,6 +2,7 @@
 class BetSmartApp {
     constructor() {
         this.bets = [];
+        this.users = [];
         this.gameData = {};
         this.selectedSport = 'All Sports';
         this.sortBy = 'value';
@@ -82,6 +83,7 @@ class BetSmartApp {
             this.render();
             this.setupEventListeners();
             this.checkDarkMode();
+            this.loadUsers();
         });
     }
 
@@ -190,6 +192,9 @@ class BetSmartApp {
                 }
             });
         });
+
+        // Admin panel
+        document.getElementById('save-subscriptions')?.addEventListener('click', () => this.saveSubscriptions());
     }
 
     showSubscribeModal() {
@@ -611,4 +616,57 @@ function submitEmail() {
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
     const app = new BetSmartApp();
+
+    // Admin panel logic
+    async function loadUsers() {
+        const userTableBody = document.getElementById('user-table-body');
+        if (!userTableBody) return;
+
+        try {
+            const snapshot = await db.collection('users').get();
+            app.users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderUsers();
+        } catch (error) {
+            console.error("Error loading users:", error);
+        }
+    }
+
+    function renderUsers() {
+        const userTableBody = document.getElementById('user-table-body');
+        if (!userTableBody) return;
+
+        userTableBody.innerHTML = '';
+        app.users.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${user.email}</td>
+                <td>
+                    <input type="checkbox" data-id="${user.id}" ${user.subscribed ? 'checked' : ''}>
+                </td>
+            `;
+            userTableBody.appendChild(row);
+        });
+    }
+
+    async function saveSubscriptions() {
+        const checkboxes = document.querySelectorAll('#user-table-body input[type="checkbox"]');
+        const batch = db.batch();
+
+        checkboxes.forEach(checkbox => {
+            const userId = checkbox.dataset.id;
+            const userRef = db.collection('users').doc(userId);
+            batch.update(userRef, { subscribed: checkbox.checked });
+        });
+
+        try {
+            await batch.commit();
+            alert('Subscription changes saved successfully!');
+        } catch (error) {
+            console.error("Error saving subscriptions:", error);
+            alert('Failed to save changes. Please try again.');
+        }
+    }
+
+    app.loadUsers = loadUsers;
+    app.saveSubscriptions = saveSubscriptions;
 });
