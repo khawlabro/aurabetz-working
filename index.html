@@ -18,6 +18,10 @@
                         <i class="fas fa-gem"></i>
                         <span>The Game</span>
                     </button>
+                    <button id="adminPanelBtn" class="btn btn-primary gap-2">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Admin</span>
+                    </button>
                     <button id="subscribeBtn" class="btn btn-primary gap-2">
     <i class="fas fa-envelope"></i>
     <span>Subscribe</span>
@@ -382,7 +386,52 @@
     </div>
 </div>
 
+    <!-- Admin Panel Modal -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">User Subscription Management</h2>
+                <button id="closeAdminModal" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="user-table">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Subscribed</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <!-- User rows will be inserted here -->
+                    </tbody>
+                </table>
+                <button id="save-subscriptions" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
     
+    <!-- Add these scripts before your admin.js -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+
+    <script>
+      // Same config as your client app
+      const firebaseConfig = {
+        apiKey: "AIzaSyDalVcdFUamoA90pSvNX2hfIkyH7hMZk9I",
+        authDomain: "aurabetz.firebaseapp.com",
+        projectId: "aurabetz1",
+        storageBucket: "aurabetz.firebasestorage.app",
+        messagingSenderId: "531651661385",
+        appId: "1:531651661385:web:d82a50a33bb77297b7f998",
+        measurementId: "G-7L19JWBH21"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
