@@ -83,7 +83,7 @@ class BetSmartApp {
             this.render();
             this.setupEventListeners();
             this.checkDarkMode();
-            if (document.getElementById('user-table-body')) {
+            if (document.getElementById('usersTable')) {
                 this.loadUsers();
             }
         });
@@ -124,6 +124,11 @@ class BetSmartApp {
             if (e.target === document.getElementById('adminModal')) {
                 this.hideAdminModal();
             }
+        });
+
+        // Search users by email
+        document.getElementById("searchEmail")?.addEventListener("input", (e) => {
+            this.searchUsers(e.target.value);
         });
 
         // Sport tabs
@@ -203,9 +208,6 @@ class BetSmartApp {
                 }
             });
         });
-
-        // Admin panel
-        document.getElementById('save-subscriptions')?.addEventListener('click', () => this.saveSubscriptions());
     }
 
     showSubscribeModal() {
@@ -224,53 +226,48 @@ class BetSmartApp {
         document.getElementById('adminModal')?.classList.remove('active');
     }
 
-    async loadUsers() {
-        const userTableBody = document.getElementById('user-table-body');
-        if (!userTableBody) return;
-
-        try {
-            const snapshot = await db.collection('users').get();
-            this.users = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            this.renderUsers();
-        } catch (error) {
-            console.error("Error loading users:", error);
+    async loadUsers(usersSnapshot) {
+        if (!usersSnapshot) {
+            usersSnapshot = await db.collection("users").get();
         }
-    }
+        const tableBody = document.getElementById("usersTable").querySelector("tbody");
+        tableBody.innerHTML = "";
 
-    renderUsers() {
-        const userTableBody = document.getElementById('user-table-body');
-        if (!userTableBody) return;
-
-        userTableBody.innerHTML = '';
-        this.users.forEach(user => {
-            const row = document.createElement('tr');
+        usersSnapshot.forEach((doc) => {
+            const user = doc.data();
+            const row = document.createElement("tr");
+            
             row.innerHTML = `
-                <td>${user.email}</td>
-                <td>
-                    <input type="checkbox" data-id="${user.id}" ${user.subscribed ? 'checked' : ''}>
-                </td>
+              <td>${user.email || "N/A"}</td>
+              <td>${user.isSubscribed ? "✅ Active" : "❌ Inactive"}</td>
+              <td>
+                <button onclick="app.toggleSubscription('${doc.id}', ${!user.isSubscribed})">
+                  ${user.isSubscribed ? "Revoke" : "Approve"}
+                </button>
+              </td>
             `;
-            userTableBody.appendChild(row);
+            
+            tableBody.appendChild(row);
         });
     }
 
-    async saveSubscriptions() {
-        const checkboxes = document.querySelectorAll('#user-table-body input[type="checkbox"]');
-        const batch = db.batch();
+    async toggleSubscription(userId, newStatus) {
+      await db.collection("users").doc(userId).update({
+        isSubscribed: newStatus,
+        subscriptionEnd: newStatus 
+          ? firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)) // 2 weeks
+          : null
+      });
+      this.loadUsers(); // Refresh the table
+    }
 
-        checkboxes.forEach(checkbox => {
-            const userId = checkbox.dataset.id;
-            const userRef = db.collection('users').doc(userId);
-            batch.update(userRef, { subscribed: checkbox.checked });
-        });
-
-        try {
-            await batch.commit();
-            alert('Subscription changes saved successfully!');
-        } catch (error) {
-            console.error("Error saving subscriptions:", error);
-            alert('Failed to save changes. Please try again.');
-        }
+    async searchUsers(email) {
+        const usersSnapshot = await db.collection("users")
+            .where("email", ">=", email)
+            .where("email", "<=", email + "\uf8ff")
+            .get();
+        
+        this.loadUsers(usersSnapshot);
     }
 
     filterAndSortBets() {
@@ -638,50 +635,8 @@ class BetSmartApp {
     }
 }
 
-// Email Signup Functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const emailInput = document.getElementById('emailInput');
-    const submitEmailBtn = document.getElementById('submitEmailBtn');
-    
-    if (submitEmailBtn) {
-        submitEmailBtn.addEventListener('click', submitEmail);
-    }
-    
-    if (emailInput) {
-        emailInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') submitEmail();
-        });
-    }
-    
-    setTimeout(() => {
-        const emailModal = document.getElementById('emailSignupModal');
-        if (emailModal) emailModal.style.display = 'block';
-    }, 1000);
-});
-
-function submitEmail() {
-    const email = document.getElementById('emailInput').value.trim();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-    if (!emailPattern.test(email)) {
-        alert('Please enter a valid email address');
-        return;
-    }
-    
-    const existing = JSON.parse(localStorage.getItem("betSmartEmails") || "[]");
-    if (!existing.includes(email)) {
-        existing.push(email);
-        localStorage.setItem("betSmartEmails", JSON.stringify(existing));
-    }
-    
-    alert('Thank you! Check your email for access.');
-    document.getElementById('emailInput').value = '';
-    
-    const modal = document.getElementById('emailSignupModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// Initialize the app
+// Initialize the app when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     const app = new BetSmartApp();
+    window.app = app;
 });
