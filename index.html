@@ -396,18 +396,20 @@
                 </button>
             </div>
             <div class="modal-body">
-                <table id="user-table">
+                <div class="admin-container">
+                  <h1>User Subscriptions</h1>
+                  <input type="text" id="searchEmail" placeholder="Search by email...">
+                  <table id="usersTable">
                     <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Subscribed</th>
-                        </tr>
+                      <tr>
+                        <th>Email</th>
+                        <th>Subscription Status</th>
+                        <th>Action</th>
+                      </tr>
                     </thead>
-                    <tbody id="user-table-body">
-                        <!-- User rows will be inserted here -->
-                    </tbody>
-                </table>
-                <button id="save-subscriptions" class="btn btn-primary">Save Changes</button>
+                    <tbody></tbody>
+                  </table>
+                </div>
             </div>
         </div>
     </div>
