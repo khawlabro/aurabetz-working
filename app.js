@@ -226,11 +226,51 @@ class BetSmartApp {
         document.getElementById('adminModal')?.classList.remove('active');
     }
 
-    async loadUsers(usersSnapshot) {
-        if (!usersSnapshot) {
-            usersSnapshot = await db.collection("users").get();
-        }
+    loadUsers() {
+        db.collection("users").onSnapshot((snapshot) => {
+            const tableBody = document.getElementById("usersTable").querySelector("tbody");
+            if (!tableBody) return;
+            tableBody.innerHTML = "";
+            snapshot.forEach((doc) => {
+                const user = doc.data();
+                const row = document.createElement("tr");
+                
+                row.innerHTML = `
+                  <td>${user.email || "N/A"}</td>
+                  <td>${user.isSubscribed ? "✅ Active" : "❌ Inactive"}</td>
+                  <td>
+                    <button onclick="app.toggleSubscription('${doc.id}', ${!user.isSubscribed})">
+                      ${user.isSubscribed ? "Revoke" : "Approve"}
+                    </button>
+                  </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        });
+    }
+
+    async toggleSubscription(userId, newStatus) {
+      await db.collection("users").doc(userId).update({
+        isSubscribed: newStatus,
+        subscriptionEnd: newStatus 
+          ? firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)) // 2 weeks
+          : null
+      });
+    }
+
+    searchUsers(email) {
+        db.collection("users")
+            .where("email", ">=", email)
+            .where("email", "<=", email + "\uf8ff")
+            .onSnapshot((snapshot) => {
+                this.renderUsers(snapshot);
+            });
+    }
+
+    renderUsers(usersSnapshot) {
         const tableBody = document.getElementById("usersTable").querySelector("tbody");
+        if (!tableBody) return;
         tableBody.innerHTML = "";
 
         usersSnapshot.forEach((doc) => {
@@ -249,25 +289,6 @@ class BetSmartApp {
             
             tableBody.appendChild(row);
         });
-    }
-
-    async toggleSubscription(userId, newStatus) {
-      await db.collection("users").doc(userId).update({
-        isSubscribed: newStatus,
-        subscriptionEnd: newStatus 
-          ? firebase.firestore.Timestamp.fromDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)) // 2 weeks
-          : null
-      });
-      this.loadUsers(); // Refresh the table
-    }
-
-    async searchUsers(email) {
-        const usersSnapshot = await db.collection("users")
-            .where("email", ">=", email)
-            .where("email", "<=", email + "\uf8ff")
-            .get();
-        
-        this.loadUsers(usersSnapshot);
     }
 
     filterAndSortBets() {
