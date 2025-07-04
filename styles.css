@@ -731,24 +731,3 @@ input[type="checkbox"] {
     text-align: left;
     border-bottom: 1px solid var(--gray-200);
 }
-.table-wrapper {
-    max-height: 400px; /* Adjust as needed */
-    overflow-y: auto;
-    position: relative;
-}
-
-#usersTable {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#usersTable thead th {
-    position: sticky;
-    top: 0;
-    background-color: var(--white);
-    z-index: 1;
-}
-
-.dark #usersTable thead th {
-    background-color: var(--gray-800);
-}
