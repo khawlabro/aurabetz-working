@@ -436,9 +436,7 @@
             
             <div class="pagination">
                 <button id="prevPage" class="pagination-btn"><i class="fas fa-chevron-left"></i></button>
-                <button id="page1" class="pagination-btn active">1</button>
-                <button id="page2" class="pagination-btn">2</button>
-                <button id="page3" class="pagination-btn">3</button>
+                <div id="paginationNumbers" style="display: inline-block;"></div>
                 <button id="nextPage" class="pagination-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
         </div>
@@ -565,6 +563,23 @@
             closeEditModal.addEventListener('click', () => editUserModal.classList.remove('active'));
             cancelEdit.addEventListener('click', () => editUserModal.classList.remove('active'));
             editUserForm.addEventListener('submit', saveUserChanges);
+
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderUsers();
+                    updatePagination();
+                }
+            });
+
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderUsers();
+                    updatePagination();
+                }
+            });
             
             // Load initial data
             loadUsers();
@@ -734,13 +749,38 @@
         // Update pagination controls
         function updatePagination() {
             const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-            // Simplified pagination - in a real app you'd generate buttons dynamically
-            document.getElementById('page1').classList.toggle('active', currentPage === 1);
-            document.getElementById('page2').classList.toggle('active', currentPage === 2);
-            document.getElementById('page3').classList.toggle('active', currentPage === 3);
+            const paginationNumbers = document.getElementById('paginationNumbers');
             
+            if (!paginationNumbers) return;
+
+            const paginationContainer = document.querySelector('.pagination');
+
+            if (totalPages <= 1) {
+                if(paginationContainer) paginationContainer.style.display = 'none';
+                return;
+            }
+            
+            if(paginationContainer) paginationContainer.style.display = 'flex';
+            
+            paginationNumbers.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = document.createElement('button');
+                pageButton.classList.add('pagination-btn');
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pageButton.textContent = i;
+                pageButton.addEventListener('click', () => {
+                    currentPage = i;
+                    renderUsers();
+                    updatePagination();
+                });
+                paginationNumbers.appendChild(pageButton);
+            }
+
             document.getElementById('prevPage').disabled = currentPage === 1;
-            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            document.getElementById('nextPage').disabled = currentPage >= totalPages;
         }
         
         // Logout function
